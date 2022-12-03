@@ -1,0 +1,71 @@
+OPPONENT_ROCK     = "A"
+OPPONENT_PAPER    = "B"
+OPPONENT_SCISSORS = "C"
+
+PLAY_ROCK     = "X"
+PLAY_PAPER    = "Y"
+PLAY_SCISSORS = "Z"
+
+FORCE_LOSE = "X"
+FORCE_DRAW = "Y"
+FORCE_WIN  = "Z"
+
+PLAY_ROCK_SCORE     = 1
+PLAY_PAPER_SCORE    = 2
+PLAY_SCISSORS_SCORE = 3
+
+OUTCOME_LOSE_SCORE = 0
+OUTCOME_DRAW_SCORE = 3
+OUTCOME_WIN_SCORE  = 6
+
+puts File.open(ARGV.first).gets_to_end.chomp.split("\n").map { |round|
+  score = 0
+
+  # opp, play = round.split(" ")
+  opp, outcome = round.split(" ")
+  play = nil
+
+  case {opp, outcome}
+  when {OPPONENT_ROCK, FORCE_LOSE}
+    play = PLAY_SCISSORS
+  when {OPPONENT_ROCK, FORCE_DRAW}
+    play = PLAY_ROCK
+  when {OPPONENT_ROCK, FORCE_WIN}
+    play = PLAY_PAPER
+  when {OPPONENT_PAPER, FORCE_LOSE}
+    play = PLAY_ROCK
+  when {OPPONENT_PAPER, FORCE_DRAW}
+    play = PLAY_PAPER
+  when {OPPONENT_PAPER, FORCE_WIN}
+    play = PLAY_SCISSORS
+  when {OPPONENT_SCISSORS, FORCE_LOSE}
+    play = PLAY_PAPER
+  when {OPPONENT_SCISSORS, FORCE_DRAW}
+    play = PLAY_SCISSORS
+  when {OPPONENT_SCISSORS, FORCE_WIN}
+    play = PLAY_ROCK
+  end
+
+  case {opp, play}
+  when {OPPONENT_ROCK, PLAY_ROCK}
+    score += OUTCOME_DRAW_SCORE + PLAY_ROCK_SCORE
+  when {OPPONENT_ROCK, PLAY_PAPER}
+    score += OUTCOME_WIN_SCORE + PLAY_PAPER_SCORE
+  when {OPPONENT_ROCK, PLAY_SCISSORS}
+    score += OUTCOME_LOSE_SCORE + PLAY_SCISSORS_SCORE
+  when {OPPONENT_PAPER, PLAY_ROCK}
+    score += OUTCOME_LOSE_SCORE + PLAY_ROCK_SCORE
+  when {OPPONENT_PAPER, PLAY_PAPER}
+    score += OUTCOME_DRAW_SCORE + PLAY_PAPER_SCORE
+  when {OPPONENT_PAPER, PLAY_SCISSORS}
+    score += OUTCOME_WIN_SCORE + PLAY_SCISSORS_SCORE
+  when {OPPONENT_SCISSORS, PLAY_ROCK}
+    score += OUTCOME_WIN_SCORE + PLAY_ROCK_SCORE
+  when {OPPONENT_SCISSORS, PLAY_PAPER}
+    score += OUTCOME_LOSE_SCORE + PLAY_PAPER_SCORE
+  when {OPPONENT_SCISSORS, PLAY_SCISSORS}
+    score += OUTCOME_DRAW_SCORE + PLAY_SCISSORS_SCORE
+  end
+
+  score
+}.sum
